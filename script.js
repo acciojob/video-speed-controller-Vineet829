@@ -1,65 +1,55 @@
-const video = document.getElementById('video');
-const playerButton = document.createElement('button');
-playerButton.textContent = '►';
-document.body.insertBefore(playerButton, video.nextSibling);
+const video = document.querySelector('.player__video');
+const playerButton = document.querySelector('.toggle');
+const rewindButton = document.querySelector('.rewind');
+const skipButton = document.querySelector('.skip');
+const volumeInput = document.querySelector('input[name="volume"]');
+const playbackRateInput = document.querySelector('input[name="playbackRate"]');
+const progress = document.querySelector('.progress');
+const progressFilled = document.querySelector('.progress__filled');
 
-const speedBar = document.querySelector('.speed-bar');
-const volumeInput = document.createElement('input');
-volumeInput.type = 'range';
-volumeInput.min = 0;
-volumeInput.max = 100;
-volumeInput.value = 75;
-volumeInput.setAttribute('data-sizing', '%');
-document.body.insertBefore(volumeInput, speedBar.parentNode.nextSibling);
-
-const playbackSpeedInput = document.createElement('input');
-playbackSpeedInput.type = 'number';
-playbackSpeedInput.value = 1;
-playbackSpeedInput.step = 0.1;
-playbackSpeedInput.setAttribute('data-sizing', 'x');
-document.body.insertBefore(playbackSpeedInput, volumeInput.nextSibling);
-
-const rewindButton = document.createElement('button');
-rewindButton.textContent = '« 10s';
-document.body.insertBefore(rewindButton, playbackSpeedInput.nextSibling);
-
-const skipButton = document.createElement('button');
-skipButton.textContent = '25s »';
-document.body.insertBefore(skipButton, rewindButton.nextSibling);
-
-function togglePlay() {
-    if (video.paused) {
-        video.play();
-        playerButton.textContent = '❚ ❚';
-    } else {
-        video.pause();
-        playerButton.textContent = '►';
-    }
+function initializePlayer() {
+  video.volume = volumeInput.value;
+  video.playbackRate = playbackRateInput.value;
+  updateProgress();
 }
 
-function updateSpeedBar() {
-    speedBar.textContent = `${video.playbackRate}×`;
+function togglePlayPause() {
+  if (video.paused) {
+    video.play();
+    playerButton.textContent = '❚ ❚';
+  } else {
+    video.pause();
+    playerButton.textContent = '►';
+  }
 }
 
-video.playbackRate = 1;
-updateSpeedBar();
+function rewind() {
+  video.currentTime = Math.max(0, video.currentTime - 10);
+}
 
-playerButton.addEventListener('click', togglePlay);
-video.addEventListener('ratechange', updateSpeedBar);
+function skip() {
+  video.currentTime = Math.min(video.duration, video.currentTime + 25);
+}
 
-volumeInput.addEventListener('input', (e) => {
-    video.volume = e.target.value / 100;
-});
+function updateVolume() {
+  video.volume = volumeInput.value;
+}
 
-playbackSpeedInput.addEventListener('input', (e) => {
-    video.playbackRate = e.target.value;
-    updateSpeedBar();
-});
+function updatePlaybackRate() {
+  video.playbackRate = playbackRateInput.value;
+}
 
-rewindButton.addEventListener('click', () => {
-    video.currentTime = Math.max(0, video.currentTime - 10);
-});
+function updateProgress() {
+  const percent = (video.currentTime / video.duration) * 100;
+  progressFilled.style.width = `${percent}%`;
+}
 
-skipButton.addEventListener('click', () => {
-    video.currentTime = Math.min(video.duration, video.currentTime + 25);
-});
+playerButton.addEventListener('click', togglePlayPause);
+rewindButton.addEventListener('click', rewind);
+skipButton.addEventListener('click', skip);
+volumeInput.addEventListener('input', updateVolume);
+playbackRateInput.addEventListener('input', updatePlaybackRate);
+video.addEventListener('timeupdate', updateProgress);
+
+initializePlayer();
+

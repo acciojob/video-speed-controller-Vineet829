@@ -2,20 +2,67 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Video Speed Scrubber</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Custom Video Player</title>
+  <style>
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .controls {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .button {
+      cursor: pointer;
+      padding: 10px;
+      background: #ddd;
+      border: none;
+      margin: 5px;
+      border-radius: 5px;
+    }
+    .progress {
+      width: 100%;
+      height: 10px;
+      background: #ddd;
+      margin-top: 10px;
+      position: relative;
+    }
+    .progress__filled {
+      height: 100%;
+      background: #ffc600;
+      width: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    input[type="range"] {
+      margin: 5px;
+      width: 200px;
+    }
+  </style>
 </head>
 <body>
 
   <div class="wrapper">
-    <video class="flex" width="765" height="430" src="https://www.w3schools.com/html/mov_bbb.mp4" controls></video>
-    <div class="speed">
-      <div class="speed-bar">1×</div>
+    <video class="player__video" width="765" height="430" src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
+    
+    <div class="controls">
+      <button class="button toggle">❚ ❚</button>
+      <button class="button rewind">« 10s</button>
+      <button class="button skip">25s »</button>
+      <label for="volume">Volume</label>
+      <input type="range" name="volume" min="0" max="1" step="0.05" value="0.75">
+      <label for="playbackRate">Playback Speed</label>
+      <input type="range" name="playbackRate" min="0.5" max="2" step="0.1" value="1">
+      <div class="progress">
+        <div class="progress__filled"></div>
+      </div>
     </div>
-  </div>
-
-<script  src="./script.js">
   
-</script>
+  <script src="script.js"></script>
 </body>
+</html>
 </html>
